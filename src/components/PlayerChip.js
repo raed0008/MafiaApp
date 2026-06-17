@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 import Icon from './Icon';
-import { colors, radius, space, font } from '../theme';
+import { colors, radius, space, font, bodyBold } from '../theme';
 
 // بطاقة لاعب قابلة للاختيار — تُستخدم في اختيار الهدف والتصويت
 export default function PlayerChip({ player, selected, onPress, disabled, accent = colors.gold, badge }) {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarText: { color: colors.text, fontSize: font.body, fontWeight: '900' },
-  name: { flex: 1, color: colors.text, fontSize: font.body, fontWeight: '700', textAlign: 'right' },
-  badge: { fontSize: font.small, fontWeight: '800' },
+  avatarText: { color: colors.text, fontSize: font.body, fontFamily: bodyBold },
+  name: { flex: 1, color: colors.text, fontSize: font.body, fontFamily: bodyBold, textAlign: 'right' },
+  badge: { fontSize: font.small, fontFamily: bodyBold },
 });

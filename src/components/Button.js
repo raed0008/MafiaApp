@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Stop, Path } from 'react-native-svg';
 import Icon from './Icon';
-import { colors, font } from '../theme';
+import { colors, font, display } from '../theme';
 
 // لوح معدني عتيق مشطوف الزوايا (octagon) بحوافّ بارزة — بنفس ستايل اللعبة
 const VARIANTS = {
@@ -89,5 +89,5 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.4 },
   content: { ...StyleSheet.absoluteFillObject, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   icon: { position: 'absolute', left: 22 },
-  text: { fontSize: font.body + 1, fontWeight: '900', letterSpacing: 0.3 },
+  text: { fontSize: font.body + 5, fontFamily: display, letterSpacing: 0.5 },
 });

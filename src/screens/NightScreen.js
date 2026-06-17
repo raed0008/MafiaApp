@@ -7,7 +7,7 @@ import RoleArt from '../art/RoleArt';
 import PlayerChip from '../components/PlayerChip';
 import { ROLES } from '../data/roles';
 import { alive, aliveMafia, investigate } from '../game/engine';
-import { colors, space, font, radius, serif } from '../theme';
+import { colors, space, font, radius, serif, body, bodyBold } from '../theme';
 
 // تعليمات كل خطوة ليلية
 const STEP_META = {
@@ -169,13 +169,13 @@ const styles = StyleSheet.create({
     marginBottom: space.lg,
   },
   bannerTitle: { fontSize: font.h1, fontWeight: '900', marginVertical: space.sm, fontFamily: serif, letterSpacing: 1 },
-  bannerInstruction: { color: colors.textDim, fontSize: font.body, lineHeight: 24, textAlign: 'center' },
-  pickLabel: { color: colors.text, fontSize: font.body, fontWeight: '800', marginBottom: space.sm, textAlign: 'right' },
+  bannerInstruction: { color: colors.textDim, fontSize: font.body, lineHeight: 24, textAlign: 'center', fontFamily: body },
+  pickLabel: { color: colors.text, fontSize: font.body, fontFamily: bodyBold, marginBottom: space.sm, textAlign: 'right' },
   empty: { alignItems: 'center', paddingVertical: space.xl },
   emptyIcon: { marginBottom: space.md },
-  emptyText: { color: colors.textDim, fontSize: font.body, textAlign: 'center' },
+  emptyText: { color: colors.textDim, fontSize: font.body, textAlign: 'center', fontFamily: body },
   resultWrap: { alignItems: 'center', paddingVertical: space.lg },
-  resultLabel: { color: colors.text, fontSize: font.body, fontWeight: '700', marginBottom: space.md, textAlign: 'center' },
+  resultLabel: { color: colors.text, fontSize: font.h2, fontFamily: serif, marginBottom: space.md, textAlign: 'center' },
   resultBadge: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
@@ -184,6 +184,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.xl,
     paddingVertical: space.md,
   },
-  resultText: { color: '#fff', fontSize: font.h1, fontWeight: '900' },
-  resultHint: { color: colors.textFaint, fontSize: font.small, marginTop: space.lg, textAlign: 'center' },
+  resultText: { color: '#fff', fontSize: font.h1, fontFamily: serif, letterSpacing: 1 },
+  resultHint: { color: colors.textFaint, fontSize: font.small, marginTop: space.lg, textAlign: 'center', fontFamily: body },
 });

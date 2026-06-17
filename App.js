@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useFonts, Rakkas_400Regular } from '@expo-google-fonts/rakkas';
+import { Cairo_400Regular, Cairo_700Bold } from '@expo-google-fonts/cairo';
 import { initAds, showInterstitial } from './src/ads';
+import { colors } from './src/theme';
 
 import HomeScreen from './src/screens/HomeScreen';
 import RulesScreen from './src/screens/RulesScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import SetupScreen from './src/screens/SetupScreen';
 import DealScreen from './src/screens/DealScreen';
 import NightScreen from './src/screens/NightScreen';
@@ -21,6 +26,8 @@ export default function App() {
   const [nightDeaths, setNightDeaths] = useState([]);
   const [winner, setWinner] = useState(null);
   const [jester, setJester] = useState(null);
+
+  const [fontsLoaded] = useFonts({ Rakkas_400Regular, Cairo_400Regular, Cairo_700Bold });
 
   // تهيئة الإعلانات مرة واحدة عند الإقلاع
   useEffect(() => {
@@ -90,10 +97,17 @@ export default function App() {
     }
   };
 
+  if (!fontsLoaded) {
+    return <View style={{ flex: 1, backgroundColor: colors.bg }} />;
+  }
+
   let content;
   switch (screen) {
     case 'rules':
       content = <RulesScreen onBack={() => setScreen('home')} />;
+      break;
+    case 'settings':
+      content = <SettingsScreen onBack={() => setScreen('home')} />;
       break;
     case 'setup':
       content = <SetupScreen onBack={() => setScreen('home')} onStart={startGame} />;
@@ -123,7 +137,13 @@ export default function App() {
       );
       break;
     default:
-      content = <HomeScreen onNewGame={() => setScreen('setup')} onRules={() => setScreen('rules')} />;
+      content = (
+        <HomeScreen
+          onNewGame={() => setScreen('setup')}
+          onRules={() => setScreen('rules')}
+          onSettings={() => setScreen('settings')}
+        />
+      );
   }
 
   return (

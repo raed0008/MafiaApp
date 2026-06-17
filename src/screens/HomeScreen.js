@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
 import NightSky from '../art/NightSky';
-import GangScene from '../art/GangScene';
 import RoleArt from '../art/RoleArt';
-import { colors, space, font, serif } from '../theme';
+import { colors, space, font, serif, body, bodyBold } from '../theme';
 
 const soon = () => Alert.alert('قريباً', 'هذه الميزة تحت التطوير.');
 
@@ -33,10 +32,10 @@ function Tab({ icon, label, active, onPress }) {
   );
 }
 
-export default function HomeScreen({ onNewGame, onRules }) {
+export default function HomeScreen({ onNewGame, onRules, onSettings }) {
   return (
     <View style={styles.root}>
-      <NightSky skyline moon={false} />
+      <NightSky scrim={0.25} />
       <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
         {/* الشريط العلوي */}
         <View style={styles.topBar}>
@@ -54,33 +53,24 @@ export default function HomeScreen({ onNewGame, onRules }) {
           </View>
           <View style={styles.topRight}>
             <TopIcon icon="crown" label="المهام" onPress={soon} />
-            <TopIcon icon="cog" label="الإعدادات" onPress={soon} />
+            <TopIcon icon="cog" label="الإعدادات" onPress={onSettings} />
           </View>
         </View>
 
-        <ScrollView
-          contentContainerStyle={styles.body}
-          showsVerticalScrollIndicator={false}
-          bounces={false}
-        >
-          {/* المشهد */}
-          <GangScene width={320} />
+        {/* مساحة المشهد (الصورة تظهر خلفها) + العنوان */}
+        <View style={styles.hero}>
+          <Text style={styles.title}>مافيا</Text>
+          <Text style={styles.subtitle}>الزعيم</Text>
+          <Text style={styles.tagline}>— اكتشف الخائن بينكم —</Text>
+        </View>
 
-          {/* العنوان */}
-          <View style={styles.titleBlock}>
-            <Text style={styles.title}>مافيا</Text>
-            <Text style={styles.subtitle}>الزعيم</Text>
-            <Text style={styles.tagline}>— اكتشف الخائن بينكم —</Text>
-          </View>
-
-          {/* القائمة */}
-          <View style={styles.menu}>
-            <Button title="لعبة جديدة" icon="account-group" variant="primary" onPress={onNewGame} />
-            <Button title="انضم إلى لعبة" icon="account-multiple-plus" variant="dark" onPress={soon} />
-            <Button title="الأدوار" icon="cards" variant="dark" onPress={onRules} />
-            <Button title="شرح اللعبة" icon="book-open-variant" variant="dark" onPress={onRules} />
-          </View>
-        </ScrollView>
+        {/* القائمة */}
+        <View style={styles.menu}>
+          <Button title="لعبة جديدة" icon="account-group" variant="primary" onPress={onNewGame} />
+          <Button title="انضم إلى لعبة" icon="account-multiple-plus" variant="dark" onPress={soon} />
+          <Button title="الأدوار" icon="cards" variant="dark" onPress={onRules} />
+          <Button title="شرح اللعبة" icon="book-open-variant" variant="dark" onPress={onRules} />
+        </View>
 
         {/* شريط التبويب السفلي */}
         <View style={styles.tabBar}>
@@ -120,8 +110,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   profileText: { alignItems: 'flex-start' },
-  playerName: { color: colors.text, fontSize: font.small, fontWeight: '800' },
-  level: { color: colors.frame, fontSize: 11, fontWeight: '800', marginTop: 1 },
+  playerName: { color: colors.text, fontSize: font.small, fontFamily: bodyBold },
+  level: { color: colors.frame, fontSize: 11, fontFamily: bodyBold, marginTop: 1 },
   xpTrack: { width: 88, height: 5, borderRadius: 3, backgroundColor: '#2A241B', marginTop: 3, overflow: 'hidden' },
   xpFill: { height: 5, backgroundColor: colors.frame, borderRadius: 3 },
   topRight: { flexDirection: 'row', gap: space.md },
@@ -136,24 +126,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  topIconLabel: { color: colors.textDim, fontSize: 10, fontWeight: '700' },
+  topIconLabel: { color: colors.textDim, fontSize: 10, fontFamily: body },
 
-  // المتن
-  body: { alignItems: 'center', paddingBottom: space.md },
-  titleBlock: { alignItems: 'center', marginTop: -10 },
-  title: { color: '#E6DAC2', fontSize: 70, fontWeight: '900', fontFamily: serif, letterSpacing: 2 },
-  subtitle: {
-    color: '#B23B36',
-    fontSize: 30,
+  // مساحة المشهد + العنوان
+  hero: { flex: 1, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: space.lg },
+  title: {
+    color: '#EBDFC6',
+    fontSize: 72,
     fontWeight: '900',
     fontFamily: serif,
-    marginTop: -8,
     letterSpacing: 2,
+    textShadowColor: 'rgba(0,0,0,0.9)',
+    textShadowOffset: { width: 0, height: 3 },
+    textShadowRadius: 10,
   },
-  tagline: { color: colors.textDim, fontSize: font.small, marginTop: 4, letterSpacing: 1 },
+  subtitle: {
+    color: '#C24039',
+    fontSize: 32,
+    fontWeight: '900',
+    fontFamily: serif,
+    marginTop: -10,
+    letterSpacing: 2,
+    textShadowColor: 'rgba(0,0,0,0.9)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
+  },
+  tagline: {
+    color: '#D8CBB2',
+    fontSize: font.small,
+    fontFamily: body,
+    marginTop: 6,
+    letterSpacing: 1,
+    textShadowColor: 'rgba(0,0,0,0.9)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
+  },
 
   // القائمة
-  menu: { alignSelf: 'stretch', gap: 12, marginTop: space.lg, paddingHorizontal: space.xs },
+  menu: { alignSelf: 'stretch', gap: 12, paddingHorizontal: space.xs },
 
   // شريط التبويب
   tabBar: {
@@ -166,5 +176,5 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
   },
   tab: { flex: 1, alignItems: 'center', gap: 3 },
-  tabLabel: { fontSize: 10, fontWeight: '800' },
+  tabLabel: { fontSize: 10, fontFamily: bodyBold },
 });

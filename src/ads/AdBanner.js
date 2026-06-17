@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from '../components/Icon';
-import { colors, font, radius, space } from '../theme';
+import { colors, font, radius, space, bodyBold } from '../theme';
 import * as Ads from './index';
 
 // بانر إعلاني — يعرض إعلان AdMob الحقيقي عند توفّره، وإلا مساحة محجوزة
@@ -41,5 +41,5 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.bgSoft,
   },
-  phText: { color: colors.textFaint, fontSize: font.small, fontWeight: '700' },
+  phText: { color: colors.textFaint, fontSize: font.small, fontFamily: bodyBold },
 });

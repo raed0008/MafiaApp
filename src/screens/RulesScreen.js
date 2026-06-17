@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Screen from '../components/Screen';
 import Icon from '../components/Icon';
+import Divider from '../components/Divider';
 import { ROLES, TEAM_LABEL } from '../data/roles';
-import { colors, space, font, radius } from '../theme';
+import { colors, space, font, radius, serif, body, bodyBold } from '../theme';
 
 const ROLE_ORDER = ['mafia', 'godfather', 'doctor', 'detective', 'sniper', 'jester', 'citizen'];
 
@@ -77,6 +78,16 @@ export default function RulesScreen({ onBack }) {
         <Bullet>للاطفال: مافيا وطبيب ومدنيون فقط.</Bullet>
         <Bullet>الموتى يتفرجون بلا تلميح.</Bullet>
       </Section>
+
+      {/* صندوق النصيحة */}
+      <View style={styles.tipBox}>
+        <View style={styles.tipHead}>
+          <Icon name="hat-fedora" size={22} color={colors.frame} />
+          <Text style={styles.tipTitle}>نصيحة</Text>
+        </View>
+        <Divider width={120} />
+        <Text style={styles.tipText}>راقب من يتكلم كثير ومن يسكت — الحقيقة أقرب مما تظن.</Text>
+      </View>
     </Screen>
   );
 }
@@ -84,10 +95,10 @@ export default function RulesScreen({ onBack }) {
 const styles = StyleSheet.create({
   section: { marginBottom: space.lg },
   sectionHead: { flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginBottom: space.sm },
-  sectionTitle: { color: colors.gold, fontSize: font.h2, fontWeight: '900', textAlign: 'right' },
-  p: { color: colors.text, fontSize: font.body, lineHeight: 26, textAlign: 'right' },
-  bMafia: { color: colors.blood, fontWeight: '900' },
-  bTown: { color: colors.town, fontWeight: '900' },
+  sectionTitle: { color: colors.gold, fontSize: font.h2 + 4, fontFamily: serif, textAlign: 'right' },
+  p: { color: colors.text, fontSize: font.body, lineHeight: 28, textAlign: 'right', fontFamily: body },
+  bMafia: { color: colors.blood, fontFamily: bodyBold },
+  bTown: { color: colors.town, fontFamily: bodyBold },
   roleCard: {
     backgroundColor: colors.card,
     borderRightWidth: 4,
@@ -97,10 +108,23 @@ const styles = StyleSheet.create({
   },
   roleHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 },
   roleNameWrap: { flexDirection: 'row-reverse', alignItems: 'center', gap: 6 },
-  roleName: { color: colors.text, fontSize: font.body, fontWeight: '900' },
+  roleName: { color: colors.text, fontSize: font.h2 + 2, fontFamily: serif },
   teamTag: { borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 3 },
-  teamTagText: { color: '#0E1116', fontSize: 11, fontWeight: '900' },
-  roleDesc: { color: colors.textDim, fontSize: font.small, lineHeight: 22, textAlign: 'right' },
+  teamTagText: { color: '#16100A', fontSize: 11, fontFamily: bodyBold },
+  roleDesc: { color: colors.textDim, fontSize: font.small, lineHeight: 22, textAlign: 'right', fontFamily: body },
   bulletRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-end', gap: 6, marginBottom: 8 },
-  bulletText: { color: colors.text, fontSize: font.body, lineHeight: 24, flexShrink: 1, textAlign: 'right' },
+  bulletText: { color: colors.text, fontSize: font.body, lineHeight: 26, flexShrink: 1, textAlign: 'right', fontFamily: body },
+  tipBox: {
+    backgroundColor: colors.cardSoft,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: space.md,
+    alignItems: 'center',
+    gap: space.sm,
+    marginTop: space.sm,
+  },
+  tipHead: { flexDirection: 'row-reverse', alignItems: 'center', gap: 8 },
+  tipTitle: { color: colors.frame, fontSize: font.h2, fontFamily: serif },
+  tipText: { color: colors.textDim, fontSize: font.small, lineHeight: 22, textAlign: 'center', fontFamily: body },
 });

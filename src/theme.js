@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-
 // باليتة نوار كلاسيكية باهتة: أسود دافئ، أحمر خافت، بيج ورقي عتيق
 export const colors = {
   bg: '#0C0B09',        // أسود دافئ
@@ -40,8 +38,12 @@ export const radius = {
   pill: 999,
 };
 
-// خط كلاسيكي (Serif) يعطي طابع لعبة عتيقة
-export const serif = Platform.select({ ios: 'Georgia', android: 'serif', default: 'serif' });
+// خطوط اللعبة: استعراضي مزخرف للعناوين، ونظيف للنصوص
+export const display = 'Rakkas_400Regular'; // مزخرف بطابع المافيا العتيق
+export const body = 'Cairo_400Regular';
+export const bodyBold = 'Cairo_700Bold';
+// alias متوافق مع الاستخدامات السابقة (العناوين)
+export const serif = display;
 
 export const font = {
   title: 34,

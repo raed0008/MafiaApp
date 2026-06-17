@@ -7,7 +7,7 @@ import RoleArt from '../art/RoleArt';
 import PlayerChip from '../components/PlayerChip';
 import { ROLES, TEAM_LABEL } from '../data/roles';
 import { alive } from '../game/engine';
-import { colors, space, font, radius, serif } from '../theme';
+import { colors, space, font, radius, serif, body, bodyBold } from '../theme';
 
 const CAUSE_TEXT = {
   mafia: 'قتلته المافيا',
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   bigIcon: { marginBottom: space.sm },
   peaceful: { alignItems: 'center', paddingVertical: space.lg },
   peaceTitle: { color: colors.town, fontSize: font.h1, fontWeight: '900', fontFamily: serif },
-  peaceText: { color: colors.textDim, fontSize: font.body, textAlign: 'center', marginTop: space.sm, lineHeight: 24 },
+  peaceText: { color: colors.textDim, fontSize: font.body, textAlign: 'center', marginTop: space.sm, lineHeight: 24, fontFamily: body },
   deathCard: {
     width: '100%',
     backgroundColor: colors.card,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: space.md,
   },
   deathName: { color: colors.text, fontSize: font.h1, fontWeight: '900', fontFamily: serif },
-  deathCause: { color: colors.textDim, fontSize: font.body, marginVertical: space.sm, textAlign: 'center' },
+  deathCause: { color: colors.textDim, fontSize: font.body, marginVertical: space.sm, textAlign: 'center', fontFamily: body },
   roleReveal: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginTop: space.sm,
   },
-  roleRevealText: { color: '#0E1116', fontSize: font.body, fontWeight: '900' },
-  teamLine: { color: colors.textFaint, fontSize: font.small, marginTop: space.sm },
-  voteHint: { color: colors.textDim, fontSize: font.small, lineHeight: 22, marginBottom: space.md, textAlign: 'right' },
+  roleRevealText: { color: '#16100A', fontSize: font.body, fontFamily: bodyBold },
+  teamLine: { color: colors.textFaint, fontSize: font.small, marginTop: space.sm, fontFamily: body },
+  voteHint: { color: colors.textDim, fontSize: font.small, lineHeight: 22, marginBottom: space.md, textAlign: 'right', fontFamily: body },
 });

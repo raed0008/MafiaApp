@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, Pressable, Switch } from 'react-nati
 import Screen from '../components/Screen';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
-import { colors, space, font, radius } from '../theme';
+import { colors, space, font, radius, serif, body, bodyBold } from '../theme';
 import { ROLES } from '../data/roles';
 import {
   MIN_PLAYERS,
@@ -170,8 +170,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   blockHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  label: { color: colors.text, fontSize: font.h2, fontWeight: '900', marginBottom: space.sm, textAlign: 'right' },
-  autoBtn: { color: colors.gold, fontSize: font.small, fontWeight: '800' },
+  label: { color: colors.text, fontSize: font.h2 + 2, fontFamily: serif, marginBottom: space.sm, textAlign: 'right' },
+  autoBtn: { color: colors.gold, fontSize: font.small, fontFamily: bodyBold },
   stepper: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space.lg },
   stepBtn: {
     width: 46,
@@ -184,8 +184,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   stepDisabled: { opacity: 0.3 },
-  stepSign: { color: colors.text, fontSize: 26, fontWeight: '900', lineHeight: 30 },
-  stepVal: { fontSize: 32, fontWeight: '900', minWidth: 50, textAlign: 'center' },
+  stepSign: { color: colors.text, fontSize: 26, fontFamily: bodyBold, lineHeight: 30 },
+  stepVal: { fontSize: 34, fontFamily: serif, minWidth: 50, textAlign: 'center' },
   mafiaRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -205,16 +205,16 @@ const styles = StyleSheet.create({
   },
   toggleText: { flex: 1, alignItems: 'flex-end' },
   toggleNameRow: { flexDirection: 'row-reverse', alignItems: 'center', gap: 6 },
-  toggleName: { color: colors.text, fontSize: font.body, fontWeight: '800', textAlign: 'right' },
-  toggleDesc: { color: colors.textDim, fontSize: font.small, marginTop: 2, textAlign: 'right' },
+  toggleName: { color: colors.text, fontSize: font.body, fontFamily: bodyBold, textAlign: 'right' },
+  toggleDesc: { color: colors.textDim, fontSize: font.small, marginTop: 2, textAlign: 'right', fontFamily: body },
   citizenBox: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: space.md,
   },
-  citizenNum: { color: colors.town, fontSize: 28, fontWeight: '900' },
-  citizenLabel: { color: colors.text, fontSize: font.body, fontWeight: '800' },
+  citizenNum: { color: colors.town, fontSize: 30, fontFamily: serif },
+  citizenLabel: { color: colors.text, fontSize: font.body, fontFamily: bodyBold },
   input: {
     backgroundColor: colors.card,
     borderWidth: 1,
@@ -224,9 +224,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     color: colors.text,
     fontSize: font.body,
+    fontFamily: body,
     marginBottom: space.sm,
     textAlign: 'right',
   },
   errorRow: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', gap: 6 },
-  error: { color: colors.blood, fontSize: font.small, textAlign: 'center', fontWeight: '700' },
+  error: { color: colors.blood, fontSize: font.small, textAlign: 'center', fontFamily: bodyBold },
 });

@@ -7,7 +7,7 @@ import RoleArt from '../art/RoleArt';
 import NightSky from '../art/NightSky';
 import { ROLES, TEAM_LABEL } from '../data/roles';
 import { allMafia } from '../game/engine';
-import { colors, space, font, radius, serif } from '../theme';
+import { colors, space, font, radius, serif, body, bodyBold } from '../theme';
 
 export default function DealScreen({ players, onDone, onBack }) {
   const [index, setIndex] = useState(0);
@@ -100,12 +100,12 @@ const styles = StyleSheet.create({
   progressWrap: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   progressBar: { flex: 1, height: 8, backgroundColor: colors.card, borderRadius: 4, overflow: 'hidden' },
   progressFill: { height: 8, backgroundColor: colors.gold, borderRadius: 4 },
-  progressText: { color: colors.textDim, fontSize: font.small, fontWeight: '800', minWidth: 50, textAlign: 'center' },
+  progressText: { color: colors.textDim, fontSize: font.small, fontFamily: bodyBold, minWidth: 50, textAlign: 'center' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   passIcon: { marginBottom: space.md },
-  passHint: { color: colors.textDim, fontSize: font.body },
-  passName: { color: colors.frame, fontSize: 40, fontWeight: '900', marginVertical: space.sm, textAlign: 'center', fontFamily: serif },
-  passNote: { color: colors.textFaint, fontSize: font.small, marginBottom: space.xl },
+  passHint: { color: colors.textDim, fontSize: font.body, fontFamily: body },
+  passName: { color: colors.frame, fontSize: 44, marginVertical: space.sm, textAlign: 'center', fontFamily: serif },
+  passNote: { color: colors.textFaint, fontSize: font.small, marginBottom: space.xl, fontFamily: body },
   roleCard: {
     width: '100%',
     backgroundColor: colors.card,
@@ -114,10 +114,10 @@ const styles = StyleSheet.create({
     padding: space.lg,
     alignItems: 'center',
   },
-  roleName: { fontSize: 36, fontWeight: '900', marginVertical: space.sm, fontFamily: serif, letterSpacing: 1 },
+  roleName: { fontSize: 42, marginVertical: space.sm, fontFamily: serif, letterSpacing: 1 },
   teamTag: { borderRadius: radius.pill, paddingHorizontal: space.md, paddingVertical: 4, marginBottom: space.md },
-  teamTagText: { color: '#0E1116', fontSize: font.small, fontWeight: '900' },
-  roleDesc: { color: colors.textDim, fontSize: font.body, lineHeight: 26, textAlign: 'center' },
+  teamTagText: { color: '#16100A', fontSize: font.small, fontFamily: bodyBold },
+  roleDesc: { color: colors.textDim, fontSize: font.body, lineHeight: 26, textAlign: 'center', fontFamily: body },
   matesBox: {
     marginTop: space.md,
     backgroundColor: colors.bloodDeep,
@@ -127,10 +127,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   matesHead: { flexDirection: 'row-reverse', alignItems: 'center', gap: 6 },
-  matesLabel: { color: '#fff', fontSize: font.small, fontWeight: '800' },
-  matesNames: { color: '#fff', fontSize: font.h2, fontWeight: '900', marginTop: 4, textAlign: 'center' },
+  matesLabel: { color: '#fff', fontSize: font.small, fontFamily: bodyBold },
+  matesNames: { color: '#fff', fontSize: font.h2, fontFamily: serif, marginTop: 4, textAlign: 'center' },
   memorizeRow: { flexDirection: 'row-reverse', alignItems: 'center', gap: 6, marginVertical: space.lg },
-  memorize: { color: colors.textFaint, fontSize: font.small },
+  memorize: { color: colors.textFaint, fontSize: font.small, fontFamily: body },
   revealBtn: { width: '100%', marginTop: space.sm },
   backBtn: { marginTop: space.sm },
 });

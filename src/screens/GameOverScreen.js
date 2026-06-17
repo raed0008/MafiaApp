@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import Icon from '../components/Icon';
 import AdBanner from '../ads/AdBanner';
 import { ROLES } from '../data/roles';
-import { colors, space, font, radius, serif } from '../theme';
+import { colors, space, font, radius, serif, body, bodyBold } from '../theme';
 
 const RESULT = {
   town: { title: 'فاز المدنيون', icon: 'trophy', color: colors.town, text: 'كشفوا كل المافيا' },
@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
     marginTop: space.md,
   },
   title: { fontSize: font.title, fontWeight: '900', marginVertical: space.sm, fontFamily: serif, letterSpacing: 1 },
-  text: { color: colors.textDim, fontSize: font.body, textAlign: 'center', lineHeight: 24 },
-  jesterName: { fontSize: font.h1, fontWeight: '900', marginTop: space.sm },
-  revealTitle: { color: colors.text, fontSize: font.h2, fontWeight: '900', marginBottom: space.sm, textAlign: 'right' },
+  text: { color: colors.textDim, fontSize: font.body, textAlign: 'center', lineHeight: 24, fontFamily: body },
+  jesterName: { fontSize: font.h1, marginTop: space.sm, fontFamily: serif },
+  revealTitle: { color: colors.text, fontSize: font.h2 + 2, fontFamily: serif, marginBottom: space.sm, textAlign: 'right' },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   rowStatus: { minWidth: 36, alignItems: 'center' },
-  aliveText: { color: colors.town, fontSize: font.body, fontWeight: '900' },
+  aliveText: { color: colors.town, fontSize: font.body, fontFamily: bodyBold },
   roleTag: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.md,
     paddingVertical: 4,
   },
-  roleTagText: { color: '#0E1116', fontSize: font.small, fontWeight: '900' },
-  rowName: { flex: 1, color: colors.text, fontSize: font.body, fontWeight: '800', textAlign: 'right' },
+  roleTagText: { color: '#16100A', fontSize: font.small, fontFamily: bodyBold },
+  rowName: { flex: 1, color: colors.text, fontSize: font.body, fontFamily: bodyBold, textAlign: 'right' },
   dead: { color: colors.textFaint, textDecorationLine: 'line-through' },
 });

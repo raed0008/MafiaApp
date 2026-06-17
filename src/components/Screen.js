@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from './Icon';
+import Divider from './Divider';
 import NightSky from '../art/NightSky';
-import { colors, space, font, serif } from '../theme';
+import { colors, space, font, serif, body, bodyBold } from '../theme';
 
 // غلاف موحّد للشاشات مع عنوان وزر رجوع اختياري + خلفية ليلية
 export default function Screen({ title, subtitle, onBack, children, scroll = true, footer, skyline = false }) {
@@ -28,6 +29,11 @@ export default function Screen({ title, subtitle, onBack, children, scroll = tru
           <View style={{ width: 70 }} />
         </View>
       )}
+      {title ? (
+        <View style={styles.dividerWrap}>
+          <Divider width={190} />
+        </View>
+      ) : null}
       <Body
         style={styles.body}
         contentContainerStyle={scroll ? styles.content : undefined}
@@ -51,10 +57,11 @@ const styles = StyleSheet.create({
     paddingBottom: space.sm,
   },
   back: { width: 70, flexDirection: 'row', alignItems: 'center', gap: 2 },
-  backText: { color: colors.gold, fontSize: font.body, fontWeight: '700' },
+  backText: { color: colors.gold, fontSize: font.body, fontFamily: bodyBold },
   titleWrap: { flex: 1, alignItems: 'center' },
   title: { color: colors.text, fontSize: font.h2, fontWeight: '900', fontFamily: serif, letterSpacing: 0.5 },
-  subtitle: { color: colors.textDim, fontSize: font.small, marginTop: 2 },
+  subtitle: { color: colors.textDim, fontSize: font.small, marginTop: 2, fontFamily: body },
+  dividerWrap: { alignItems: 'center', marginBottom: space.sm, marginTop: -2 },
   body: { flex: 1 },
   content: { padding: space.md, paddingBottom: space.xl },
   footer: {
