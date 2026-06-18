@@ -15,6 +15,7 @@ export function suggestConfig(playerCount) {
     detective: n >= 6,
     sniper: false,
     jester: false,
+    discussionMinutes: 2, // مدة مؤقّت النقاش نهاراً (0 = بلا مؤقّت)
   };
 }
 

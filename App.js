@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts, Rakkas_400Regular } from '@expo-google-fonts/rakkas';
 import { Cairo_400Regular, Cairo_700Bold } from '@expo-google-fonts/cairo';
 import { initAds, showInterstitial } from './src/ads';
+import { loadSettings } from './src/settings';
 import { colors } from './src/theme';
 
 import HomeScreen from './src/screens/HomeScreen';
@@ -29,9 +30,10 @@ export default function App() {
 
   const [fontsLoaded] = useFonts({ Rakkas_400Regular, Cairo_400Regular, Cairo_700Bold });
 
-  // تهيئة الإعلانات مرة واحدة عند الإقلاع
+  // تهيئة الإعلانات وتحميل الإعدادات المحفوظة مرة واحدة عند الإقلاع
   useEffect(() => {
     initAds();
+    loadSettings();
   }, []);
 
   const startGame = (names, config) => {
@@ -122,7 +124,13 @@ export default function App() {
       break;
     case 'day':
       content = (
-        <DayScreen players={players} dayNumber={dayNumber} deaths={nightDeaths} onExecute={resolveVote} />
+        <DayScreen
+          players={players}
+          dayNumber={dayNumber}
+          deaths={nightDeaths}
+          discussionMinutes={setup.config?.discussionMinutes ?? 0}
+          onExecute={resolveVote}
+        />
       );
       break;
     case 'over':

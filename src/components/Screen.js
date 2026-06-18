@@ -2,17 +2,26 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from './Icon';
-import Divider from './Divider';
-import NightSky from '../art/NightSky';
+import { Flourish, Suit } from './Ornament';
+import Backdrop from '../art/Backdrop';
 import { colors, space, font, serif, body, bodyBold } from '../theme';
 
-// غلاف موحّد للشاشات مع عنوان وزر رجوع اختياري + خلفية ليلية
-export default function Screen({ title, subtitle, onBack, children, scroll = true, footer, skyline = false }) {
+// غلاف موحّد للشاشات: خلفية مرسومة + ترويسة مزخرفة + تذييل
+export default function Screen({
+  title,
+  subtitle,
+  onBack,
+  children,
+  scroll = true,
+  footer,
+  backdrop = 'room',
+}) {
   const Body = scroll ? ScrollView : View;
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      <NightSky skyline={skyline} />
-      {(title || onBack) && (
+      <Backdrop variant={backdrop} />
+
+      {title || onBack ? (
         <View style={styles.header}>
           {onBack ? (
             <Pressable onPress={onBack} hitSlop={12} style={styles.back}>
@@ -20,20 +29,28 @@ export default function Screen({ title, subtitle, onBack, children, scroll = tru
               <Text style={styles.backText}>رجوع</Text>
             </Pressable>
           ) : (
-            <View style={{ width: 70 }} />
+            <View style={{ width: 72 }} />
           )}
           <View style={styles.titleWrap}>
-            {title ? <Text style={styles.title}>{title}</Text> : null}
+            {title ? (
+              <View style={styles.titleRow}>
+                <Suit type="spade" size={11} color={colors.goldDeep} />
+                <Text style={styles.title}>{title}</Text>
+                <Suit type="spade" size={11} color={colors.goldDeep} />
+              </View>
+            ) : null}
             {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
           </View>
-          <View style={{ width: 70 }} />
-        </View>
-      )}
-      {title ? (
-        <View style={styles.dividerWrap}>
-          <Divider width={190} />
+          <View style={{ width: 72 }} />
         </View>
       ) : null}
+
+      {title ? (
+        <View style={styles.dividerWrap}>
+          <Flourish width={200} color={colors.gold} opacity={0.85} />
+        </View>
+      ) : null}
+
       <Body
         style={styles.body}
         contentContainerStyle={scroll ? styles.content : undefined}
@@ -41,6 +58,7 @@ export default function Screen({ title, subtitle, onBack, children, scroll = tru
       >
         {children}
       </Body>
+
       {footer ? <View style={styles.footer}>{footer}</View> : null}
     </SafeAreaView>
   );
@@ -54,21 +72,31 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: space.md,
     paddingTop: space.sm,
-    paddingBottom: space.sm,
+    paddingBottom: 6,
   },
-  back: { width: 70, flexDirection: 'row', alignItems: 'center', gap: 2 },
+  back: { width: 72, flexDirection: 'row', alignItems: 'center', gap: 2 },
   backText: { color: colors.gold, fontSize: font.body, fontFamily: bodyBold },
   titleWrap: { flex: 1, alignItems: 'center' },
-  title: { color: colors.text, fontSize: font.h2, fontWeight: '900', fontFamily: serif, letterSpacing: 0.5 },
-  subtitle: { color: colors.textDim, fontSize: font.small, marginTop: 2, fontFamily: body },
-  dividerWrap: { alignItems: 'center', marginBottom: space.sm, marginTop: -2 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  title: {
+    color: colors.frame,
+    fontSize: font.h1,
+    fontFamily: serif,
+    letterSpacing: 1,
+    textShadowColor: 'rgba(0,0,0,0.8)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 5,
+  },
+  subtitle: { color: colors.textDim, fontSize: font.small, marginTop: 3, fontFamily: body },
+  dividerWrap: { alignItems: 'center', marginBottom: space.sm, marginTop: 1 },
   body: { flex: 1 },
   content: { padding: space.md, paddingBottom: space.xl },
   footer: {
     padding: space.md,
+    paddingTop: space.sm,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    backgroundColor: colors.bgSoft,
+    backgroundColor: 'rgba(8,7,5,0.82)',
     gap: space.sm,
   },
 });

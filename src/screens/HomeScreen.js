@@ -3,13 +3,18 @@ import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
-import NightSky from '../art/NightSky';
-import RoleArt from '../art/RoleArt';
-import { colors, space, font, serif, body, bodyBold } from '../theme';
+import Divider from '../components/Divider';
+import Frame from '../components/Frame';
+import Logo from '../art/Logo';
+import Backdrop from '../art/Backdrop';
+import * as feedback from '../feedback';
+import { colors, space, font, serif, body, bodyBold, shadow } from '../theme';
 
-const soon = () => Alert.alert('قريباً', 'هذه الميزة تحت التطوير.');
+const soon = () => {
+  feedback.tap();
+  Alert.alert('قريباً', 'هذه الميزة تحت التطوير.');
+};
 
-// أيقونة علوية (مهام / إعدادات)
 function TopIcon({ icon, label, onPress }) {
   return (
     <Pressable onPress={onPress} style={styles.topIcon} hitSlop={8}>
@@ -21,13 +26,13 @@ function TopIcon({ icon, label, onPress }) {
   );
 }
 
-// عنصر شريط التبويب السفلي
 function Tab({ icon, label, active, onPress }) {
-  const color = active ? colors.blood : colors.textDim;
+  const color = active ? colors.gold : colors.textDim;
   return (
     <Pressable onPress={onPress} style={styles.tab} hitSlop={6}>
-      <Icon name={icon} size={23} color={active ? '#C7423F' : colors.textDim} />
+      <Icon name={icon} size={23} color={color} />
       <Text style={[styles.tabLabel, { color }]}>{label}</Text>
+      {active ? <View style={styles.tabDot} /> : null}
     </Pressable>
   );
 }
@@ -35,49 +40,57 @@ function Tab({ icon, label, active, onPress }) {
 export default function HomeScreen({ onNewGame, onRules, onSettings }) {
   return (
     <View style={styles.root}>
-      <NightSky scrim={0.25} />
+      <Backdrop variant="image" />
       <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-        {/* الشريط العلوي */}
+        {/* الشريط العلوي — بطاقة عضوية */}
         <View style={styles.topBar}>
-          <View style={styles.profile}>
-            <View style={styles.avatarFrame}>
-              <RoleArt role="mafia" size={42} />
-            </View>
-            <View style={styles.profileText}>
-              <Text style={styles.playerName}>اللاعب</Text>
-              <Text style={styles.level}>Lv. 1</Text>
-              <View style={styles.xpTrack}>
-                <View style={[styles.xpFill, { width: '35%' }]} />
+          <Frame variant="plaque" rad={12} padding={8} style={styles.profile}>
+            <View style={styles.profileRow}>
+              <View style={styles.avatarFrame}>
+                <Logo size={38} />
+              </View>
+              <View style={styles.profileText}>
+                <Text style={styles.playerName}>الزعيم</Text>
+                <Text style={styles.level}>المرتبة ١</Text>
+                <View style={styles.xpTrack}>
+                  <View style={[styles.xpFill, { width: '35%' }]} />
+                </View>
               </View>
             </View>
-          </View>
+          </Frame>
           <View style={styles.topRight}>
             <TopIcon icon="crown" label="المهام" onPress={soon} />
             <TopIcon icon="cog" label="الإعدادات" onPress={onSettings} />
           </View>
         </View>
 
-        {/* مساحة المشهد (الصورة تظهر خلفها) + العنوان */}
+        {/* البطل */}
         <View style={styles.hero}>
+          <Logo size={132} />
           <Text style={styles.title}>مافيا</Text>
-          <Text style={styles.subtitle}>الزعيم</Text>
-          <Text style={styles.tagline}>— اكتشف الخائن بينكم —</Text>
+          <Text style={styles.subtitle}>الـــزعـــيـــم</Text>
+          <View style={styles.heroDivider}>
+            <Divider width={210} color={colors.gold} />
+          </View>
+          <Text style={styles.tagline}>اكتشف الخائن بينكم قبل فوات الأوان</Text>
         </View>
 
         {/* القائمة */}
         <View style={styles.menu}>
-          <Button title="لعبة جديدة" icon="account-group" variant="primary" onPress={onNewGame} />
+          <Button title="لعبة جديدة" icon="cards-playing-outline" variant="gold" onPress={onNewGame} />
+          <View style={styles.menuRow}>
+            <Button title="الأدوار" icon="cards" variant="dark" onPress={onRules} style={styles.half} />
+            <Button title="الشرح" icon="book-open-variant" variant="dark" onPress={onRules} style={styles.half} />
+          </View>
           <Button title="انضم إلى لعبة" icon="account-multiple-plus" variant="dark" onPress={soon} />
-          <Button title="الأدوار" icon="cards" variant="dark" onPress={onRules} />
-          <Button title="شرح اللعبة" icon="book-open-variant" variant="dark" onPress={onRules} />
         </View>
 
         {/* شريط التبويب السفلي */}
         <View style={styles.tabBar}>
           <Tab icon="storefront" label="المتجر" onPress={soon} />
           <Tab icon="medal" label="الإنجازات" onPress={soon} />
-          <Tab icon="home" label="الرئيسية" active />
-          <Tab icon="chart-bar" label="التصنيف" onPress={soon} />
+          <Tab icon="home-variant" label="الرئيسية" active />
+          <Tab icon="trophy-variant" label="التصنيف" onPress={soon} />
           <Tab icon="email-outline" label="الرسائل" onPress={soon} />
         </View>
       </SafeAreaView>
@@ -89,83 +102,78 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   safe: { flex: 1, paddingHorizontal: space.md },
 
-  // الشريط العلوي
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    paddingTop: space.sm,
-    paddingBottom: space.xs,
-  },
-  profile: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  topBar: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', paddingTop: space.sm },
+  profile: { },
+  profileRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   avatarFrame: {
-    width: 48,
-    height: 48,
+    width: 46,
+    height: 46,
     borderRadius: 10,
     borderWidth: 1.5,
     borderColor: colors.frame,
-    backgroundColor: colors.card,
+    backgroundColor: colors.bgSoft,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
   profileText: { alignItems: 'flex-start' },
-  playerName: { color: colors.text, fontSize: font.small, fontFamily: bodyBold },
-  level: { color: colors.frame, fontSize: 11, fontFamily: bodyBold, marginTop: 1 },
-  xpTrack: { width: 88, height: 5, borderRadius: 3, backgroundColor: '#2A241B', marginTop: 3, overflow: 'hidden' },
-  xpFill: { height: 5, backgroundColor: colors.frame, borderRadius: 3 },
-  topRight: { flexDirection: 'row', gap: space.md },
+  playerName: { color: colors.text, fontSize: font.small + 1, fontFamily: bodyBold },
+  level: { color: colors.gold, fontSize: 11, fontFamily: bodyBold, marginTop: 1 },
+  xpTrack: { width: 90, height: 5, borderRadius: 3, backgroundColor: '#2A241B', marginTop: 3, overflow: 'hidden' },
+  xpFill: { height: 5, backgroundColor: colors.gold, borderRadius: 3 },
+
+  topRight: { flexDirection: 'row', gap: space.md, paddingTop: 2 },
   topIcon: { alignItems: 'center', gap: 3 },
   topIconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.bgSoft,
+    borderColor: colors.gold,
+    backgroundColor: 'rgba(20,16,11,0.7)',
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.soft,
   },
   topIconLabel: { color: colors.textDim, fontSize: 10, fontFamily: body },
 
-  // مساحة المشهد + العنوان
-  hero: { flex: 1, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: space.lg },
+  hero: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   title: {
-    color: '#EBDFC6',
-    fontSize: 72,
-    fontWeight: '900',
+    color: '#EFE3C8',
+    fontSize: 76,
     fontFamily: serif,
-    letterSpacing: 2,
-    textShadowColor: 'rgba(0,0,0,0.9)',
-    textShadowOffset: { width: 0, height: 3 },
-    textShadowRadius: 10,
+    letterSpacing: 3,
+    marginTop: space.sm,
+    textShadowColor: 'rgba(0,0,0,0.95)',
+    textShadowOffset: { width: 0, height: 4 },
+    textShadowRadius: 12,
   },
   subtitle: {
-    color: '#C24039',
-    fontSize: 32,
-    fontWeight: '900',
+    color: colors.blood,
+    fontSize: 30,
     fontFamily: serif,
-    marginTop: -10,
-    letterSpacing: 2,
-    textShadowColor: 'rgba(0,0,0,0.9)',
+    marginTop: -12,
+    letterSpacing: 4,
+    textShadowColor: 'rgba(0,0,0,0.95)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
+  heroDivider: { marginTop: space.md },
   tagline: {
-    color: '#D8CBB2',
-    fontSize: font.small,
+    color: '#DCCFB4',
+    fontSize: font.small + 1,
     fontFamily: body,
-    marginTop: 6,
-    letterSpacing: 1,
+    marginTop: space.md,
+    letterSpacing: 0.5,
     textShadowColor: 'rgba(0,0,0,0.9)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 6,
   },
 
-  // القائمة
-  menu: { alignSelf: 'stretch', gap: 12, paddingHorizontal: space.xs },
+  menu: { alignSelf: 'stretch', gap: 12, paddingHorizontal: space.xs, paddingBottom: space.sm },
+  menuRow: { flexDirection: 'row', gap: 12 },
+  half: { flex: 1 },
 
-  // شريط التبويب
   tabBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -177,4 +185,5 @@ const styles = StyleSheet.create({
   },
   tab: { flex: 1, alignItems: 'center', gap: 3 },
   tabLabel: { fontSize: 10, fontFamily: bodyBold },
+  tabDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: colors.gold, marginTop: 1 },
 });

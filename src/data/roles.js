@@ -30,8 +30,8 @@ export const ROLES = {
     color: colors.heal,
     icon: 'medical-bag',
     wakesAtNight: true,
-    short: 'يحمي لاعب من القتل كل ليلة.',
-    desc: 'يحمي لاعب من القتل كل ليلة.',
+    short: 'يحمي لاعب كل ليلة. يحمي نفسه مرة واحدة.',
+    desc: 'يحمي لاعب من القتل كل ليلة. يستطيع حماية نفسه مرة واحدة فقط طوال اللعبة.',
   },
   detective: {
     key: 'detective',

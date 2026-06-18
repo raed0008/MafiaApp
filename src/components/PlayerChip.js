@@ -1,9 +1,9 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 import Icon from './Icon';
-import { colors, radius, space, font, bodyBold } from '../theme';
+import { colors, radius, space, font, serif, bodyBold, body, shadow } from '../theme';
 
-// بطاقة لاعب قابلة للاختيار — تُستخدم في اختيار الهدف والتصويت
+// صفّ ملفّ لاعب — قابل للاختيار (اختيار الهدف والتصويت)
 export default function PlayerChip({ player, selected, onPress, disabled, accent = colors.gold, badge }) {
   return (
     <Pressable
@@ -11,26 +11,35 @@ export default function PlayerChip({ player, selected, onPress, disabled, accent
       disabled={disabled}
       style={({ pressed }) => [
         styles.chip,
+        !disabled && shadow.soft,
         selected && { borderColor: accent, backgroundColor: colors.cardSoft },
-        pressed && !disabled && { opacity: 0.8 },
+        pressed && !disabled && { opacity: 0.85, transform: [{ scale: 0.99 }] },
         disabled && styles.disabled,
       ]}
     >
-      <View
-        style={[
-          styles.avatar,
-          { backgroundColor: selected ? accent : colors.border },
-        ]}
-      >
-        <Text style={[styles.avatarText, selected && { color: '#0E1116' }]}>
+      {selected ? <View style={[styles.edge, { backgroundColor: accent }]} /> : null}
+
+      <View style={[styles.avatar, { borderColor: selected ? accent : colors.border, backgroundColor: selected ? accent : colors.bgSoft }]}>
+        <Text style={[styles.monogram, { color: selected ? '#1B130A' : colors.frame }]}>
           {player.name?.charAt(0) || '؟'}
         </Text>
       </View>
+
       <Text style={styles.name} numberOfLines={1}>
         {player.name}
       </Text>
-      {badge ? <Text style={[styles.badge, { color: accent }]}>{badge}</Text> : null}
-      {selected ? <Icon name="check-circle" size={24} color={accent} /> : null}
+
+      {badge ? (
+        <View style={[styles.badge, { borderColor: accent }]}>
+          <Text style={[styles.badgeText, { color: accent }]}>{badge}</Text>
+        </View>
+      ) : null}
+
+      {selected ? (
+        <Icon name="check-decagram" size={26} color={accent} />
+      ) : (
+        <Icon name="circle-outline" size={22} color={colors.textFaint} />
+      )}
     </Pressable>
   );
 }
@@ -43,20 +52,30 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.border,
     borderRadius: radius.md,
-    paddingVertical: 12,
+    paddingVertical: 11,
     paddingHorizontal: space.md,
     gap: space.sm,
     marginBottom: space.sm,
+    overflow: 'hidden',
   },
-  disabled: { opacity: 0.35 },
+  edge: { position: 'absolute', right: 0, top: 0, bottom: 0, width: 4 },
+  disabled: { opacity: 0.4 },
   avatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarText: { color: colors.text, fontSize: font.body, fontFamily: bodyBold },
-  name: { flex: 1, color: colors.text, fontSize: font.body, fontFamily: bodyBold, textAlign: 'right' },
-  badge: { fontSize: font.small, fontFamily: bodyBold },
+  monogram: { fontSize: 20, fontFamily: serif },
+  name: { flex: 1, color: colors.text, fontSize: font.body + 1, fontFamily: bodyBold, textAlign: 'right' },
+  badge: {
+    borderWidth: 1,
+    borderRadius: radius.pill,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    backgroundColor: colors.bgSoft,
+  },
+  badgeText: { fontSize: font.small, fontFamily: bodyBold },
 });

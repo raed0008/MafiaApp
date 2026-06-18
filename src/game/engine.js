@@ -57,7 +57,16 @@ export function resolveNight(players, actions) {
   const byId = (id) => next.find((p) => p.id === id);
   const deaths = [];
 
-  const protectedId = actions.doctorTarget ?? null;
+  // حماية الطبيب — قاعدة: يحمي نفسه مرة واحدة فقط طوال اللعبة
+  const doctor = next.find((p) => p.role === 'doctor');
+  let protectedId = actions.doctorTarget ?? null;
+  if (doctor && protectedId === doctor.id) {
+    if (doctor.selfHealUsed) {
+      protectedId = null; // استُهلكت الحماية الذاتية — لا حماية
+    } else {
+      doctor.selfHealUsed = true;
+    }
+  }
 
   // ضحية المافيا
   if (actions.mafiaTarget) {

@@ -3,42 +3,23 @@ import { View, Text, StyleSheet } from 'react-native';
 import Screen from '../components/Screen';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
+import Frame from '../components/Frame';
+import Seal from '../components/Seal';
 import RoleArt from '../art/RoleArt';
 import PlayerChip from '../components/PlayerChip';
 import { ROLES } from '../data/roles';
 import { alive, aliveMafia, investigate } from '../game/engine';
+import * as feedback from '../feedback';
 import { colors, space, font, radius, serif, body, bodyBold } from '../theme';
 
-// تعليمات كل خطوة ليلية
 const STEP_META = {
-  mafia: {
-    role: 'mafia',
-    title: 'المافيا',
-    instruction: 'اختر ضحية المافيا',
-    action: 'قتل',
-  },
-  doctor: {
-    role: 'doctor',
-    title: 'الطبيب',
-    instruction: 'اختر من يحميه الطبيب',
-    action: 'حماية',
-  },
-  detective: {
-    role: 'detective',
-    title: 'المحقق',
-    instruction: 'اختر من يفحصه المحقق',
-    action: 'فحص',
-  },
-  sniper: {
-    role: 'sniper',
-    title: 'القناص',
-    instruction: 'اختر هدف القناص أو تخط',
-    action: 'إطلاق',
-  },
+  mafia: { role: 'mafia', title: 'المافيا', instruction: 'اختر ضحية هذه الليلة', action: 'قتل' },
+  doctor: { role: 'doctor', title: 'الطبيب', instruction: 'اختر من تحميه الليلة', action: 'حماية' },
+  detective: { role: 'detective', title: 'المحقق', instruction: 'اختر من تحقّق في أمره', action: 'فحص' },
+  sniper: { role: 'sniper', title: 'القنّاص', instruction: 'صوّب على هدفك أو تخطَّ', action: 'إطلاق' },
 };
 
 export default function NightScreen({ players, dayNumber, onResolve }) {
-  // تحديد الخطوات الفعّالة حسب من هو حيّ
   const steps = useMemo(() => {
     const list = [];
     if (aliveMafia(players).length > 0) list.push('mafia');
@@ -57,17 +38,15 @@ export default function NightScreen({ players, dayNumber, onResolve }) {
   const stepKey = steps[stepIdx];
   const meta = stepKey ? STEP_META[stepKey] : null;
   const role = meta ? ROLES[meta.role] : null;
+  const doctor = players.find((p) => p.role === 'doctor');
 
   const goNext = (extraAction) => {
     const merged = { ...actions, ...extraAction };
     setActions(merged);
     setSelected(null);
     setDetectiveResult(null);
-    if (stepIdx + 1 >= steps.length) {
-      onResolve(merged);
-    } else {
-      setStepIdx(stepIdx + 1);
-    }
+    if (stepIdx + 1 >= steps.length) onResolve(merged);
+    else setStepIdx(stepIdx + 1);
   };
 
   const confirm = () => {
@@ -75,42 +54,43 @@ export default function NightScreen({ players, dayNumber, onResolve }) {
     else if (stepKey === 'doctor') goNext({ doctorTarget: selected });
     else if (stepKey === 'sniper') goNext({ sniperTarget: selected });
     else if (stepKey === 'detective') {
-      // عرض النتيجة قبل المتابعة
-      const target = players.find((p) => p.id === selected);
-      setDetectiveResult(investigate(target));
+      feedback.reveal();
+      setDetectiveResult(investigate(players.find((p) => p.id === selected)));
     }
   };
 
-  // لا توجد خطوات ليلية (مثلاً مدنيون فقط) → ليلة هادئة
+  // لا خطوات ليلية → ليلة هادئة
   if (steps.length === 0) {
     return (
-      <Screen title={`الليلة ${dayNumber}`} subtitle="الجميع نائم">
-        <View style={styles.empty}>
-          <Icon name="weather-night" size={64} color={colors.textDim} style={styles.emptyIcon} />
-          <Text style={styles.emptyText}>ليلة هادئة</Text>
-        </View>
-        <Button title="طلوع النهار" icon="white-balance-sunny" onPress={() => onResolve({})} />
+      <Screen title={`الليلة ${dayNumber}`} subtitle="الجميع نائم" backdrop="room">
+        <Frame variant="plaque" corners rad={radius.lg} padding={space.xl} style={styles.quiet}>
+          <Icon name="weather-night" size={70} color={colors.gold} />
+          <Text style={styles.quietText}>تمرّ الليلة بسلام...</Text>
+        </Frame>
+        <Button title="طلوع النهار" icon="white-balance-sunny" variant="gold" onPress={() => onResolve({})} />
       </Screen>
     );
   }
 
   const accent = role.color;
+  const isMafia = role.team === 'mafia';
 
   return (
     <Screen
       title={`الليلة ${dayNumber}`}
-      subtitle={`${stepIdx + 1} / ${steps.length}`}
+      subtitle={`الدور ${stepIdx + 1} من ${steps.length}`}
+      backdrop="room"
       footer={
         detectiveResult ? (
-          <Button title="تابع" onPress={() => goNext()} />
+          <Button title="تابع" variant="gold" onPress={() => goNext()} />
         ) : (
           <>
             {stepKey === 'sniper' ? (
-              <Button title="تخط" variant="ghost" onPress={() => goNext({ sniperTarget: null })} />
+              <Button title="تخطَّ الإطلاق" variant="ghost" onPress={() => goNext({ sniperTarget: null })} />
             ) : null}
             <Button
               title={`تأكيد ${meta.action}`}
-              variant={role.team === 'mafia' ? 'danger' : 'primary'}
+              variant={isMafia ? 'danger' : 'primary'}
               onPress={confirm}
               disabled={selected == null}
             />
@@ -118,41 +98,44 @@ export default function NightScreen({ players, dayNumber, onResolve }) {
         )
       }
     >
-      <View style={[styles.banner, { borderColor: accent }]}>
-        <RoleArt role={meta.role} size={84} />
+      {/* بطاقة الدور الفاعل */}
+      <Frame variant="plaque" accent={accent} corners rad={radius.lg} padding={space.lg} glow style={styles.banner}>
+        <View style={styles.portrait}>
+          <RoleArt role={meta.role} size={86} />
+        </View>
         <Text style={[styles.bannerTitle, { color: accent }]}>{meta.title}</Text>
         <Text style={styles.bannerInstruction}>{meta.instruction}</Text>
-      </View>
+      </Frame>
 
       {detectiveResult ? (
-        // نتيجة المحقق
         <View style={styles.resultWrap}>
-          <Text style={styles.resultLabel}>{players.find((p) => p.id === selected)?.name}</Text>
-          <View
-            style={[
-              styles.resultBadge,
-              { backgroundColor: detectiveResult === 'mafia' ? colors.blood : colors.town },
-            ]}
-          >
-            <Icon name={detectiveResult === 'mafia' ? 'incognito' : 'account'} size={26} color="#fff" />
-            <Text style={styles.resultText}>{detectiveResult === 'mafia' ? 'مافيا' : 'مدني'}</Text>
-          </View>
-          <Text style={styles.resultHint}>أبلغ المحقق بالنتيجة</Text>
+          <Text style={styles.resultName}>{players.find((p) => p.id === selected)?.name}</Text>
+          <Seal
+            size={120}
+            color={detectiveResult === 'mafia' ? colors.blood : colors.town}
+            icon={detectiveResult === 'mafia' ? 'incognito' : 'shield-account'}
+            label={detectiveResult === 'mafia' ? 'مافيا' : 'بريء'}
+          />
+          <Text style={styles.resultHint}>أبلغ المحقق بالنتيجة سرّاً</Text>
         </View>
       ) : (
-        // اختيار الهدف
         <View>
-          <Text style={styles.pickLabel}>اختر لاعب</Text>
-          {livePlayers.map((p) => (
-            <PlayerChip
-              key={p.id}
-              player={p}
-              selected={selected === p.id}
-              accent={accent}
-              onPress={() => setSelected(p.id)}
-              badge={stepKey === 'doctor' ? null : undefined}
-            />
-          ))}
+          <Text style={styles.pickLabel}>المشتبه بهم</Text>
+          {livePlayers.map((p) => {
+            const isSelf = stepKey === 'doctor' && doctor && p.id === doctor.id;
+            const selfBlocked = isSelf && doctor.selfHealUsed;
+            return (
+              <PlayerChip
+                key={p.id}
+                player={p}
+                selected={selected === p.id}
+                accent={accent}
+                disabled={selfBlocked}
+                onPress={() => setSelected(p.id)}
+                badge={isSelf ? (selfBlocked ? 'استُخدمت' : 'نفسك') : undefined}
+              />
+            );
+          })}
         </View>
       )}
     </Screen>
@@ -160,30 +143,14 @@ export default function NightScreen({ players, dayNumber, onResolve }) {
 }
 
 const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: colors.card,
-    borderWidth: 1.5,
-    borderRadius: radius.lg,
-    padding: space.lg,
-    alignItems: 'center',
-    marginBottom: space.lg,
-  },
-  bannerTitle: { fontSize: font.h1, fontWeight: '900', marginVertical: space.sm, fontFamily: serif, letterSpacing: 1 },
+  quiet: { alignItems: 'center', gap: space.md, marginBottom: space.lg },
+  quietText: { color: colors.textDim, fontSize: font.h2, fontFamily: serif, textAlign: 'center' },
+  banner: { alignItems: 'center', marginBottom: space.lg },
+  portrait: { marginBottom: space.sm },
+  bannerTitle: { fontSize: font.title, fontFamily: serif, letterSpacing: 1, marginBottom: 4 },
   bannerInstruction: { color: colors.textDim, fontSize: font.body, lineHeight: 24, textAlign: 'center', fontFamily: body },
-  pickLabel: { color: colors.text, fontSize: font.body, fontFamily: bodyBold, marginBottom: space.sm, textAlign: 'right' },
-  empty: { alignItems: 'center', paddingVertical: space.xl },
-  emptyIcon: { marginBottom: space.md },
-  emptyText: { color: colors.textDim, fontSize: font.body, textAlign: 'center', fontFamily: body },
-  resultWrap: { alignItems: 'center', paddingVertical: space.lg },
-  resultLabel: { color: colors.text, fontSize: font.h2, fontFamily: serif, marginBottom: space.md, textAlign: 'center' },
-  resultBadge: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    gap: 8,
-    borderRadius: radius.lg,
-    paddingHorizontal: space.xl,
-    paddingVertical: space.md,
-  },
-  resultText: { color: '#fff', fontSize: font.h1, fontFamily: serif, letterSpacing: 1 },
-  resultHint: { color: colors.textFaint, fontSize: font.small, marginTop: space.lg, textAlign: 'center', fontFamily: body },
+  pickLabel: { color: colors.frame, fontSize: font.h2, fontFamily: serif, marginBottom: space.sm, textAlign: 'right' },
+  resultWrap: { alignItems: 'center', paddingVertical: space.md, gap: space.md },
+  resultName: { color: colors.text, fontSize: font.h1, fontFamily: serif, textAlign: 'center' },
+  resultHint: { color: colors.textFaint, fontSize: font.small, fontFamily: body, textAlign: 'center' },
 });

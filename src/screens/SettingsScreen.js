@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch, Pressable, Alert } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Screen from '../components/Screen';
 import Icon from '../components/Icon';
+import Frame from '../components/Frame';
+import { useSettings, setSetting, resetSettings } from '../settings';
+import * as feedback from '../feedback';
 import { colors, space, font, radius, body, bodyBold } from '../theme';
 
-// صف إعداد موحّد: أيقونة + عنوان + تحكّم
 function Row({ icon, label, children, onPress, last }) {
   const Comp = onPress ? Pressable : View;
   return (
@@ -13,7 +15,9 @@ function Row({ icon, label, children, onPress, last }) {
       <View style={styles.control}>{children}</View>
       <View style={styles.rowLabel}>
         <Text style={styles.label}>{label}</Text>
-        <Icon name={icon} size={20} color={colors.frame} />
+        <View style={styles.rowIcon}>
+          <Icon name={icon} size={18} color={colors.gold} />
+        </View>
       </View>
     </Comp>
   );
@@ -24,8 +28,8 @@ function GoldSwitch({ value, onValueChange }) {
     <Switch
       value={value}
       onValueChange={onValueChange}
-      trackColor={{ false: '#2A241B', true: '#7A6536' }}
-      thumbColor={value ? colors.frame : '#8C8270'}
+      trackColor={{ false: '#2A241B', true: colors.goldDeep }}
+      thumbColor={value ? colors.goldLight : '#8C8270'}
       ios_backgroundColor="#2A241B"
     />
   );
@@ -34,113 +38,102 @@ function GoldSwitch({ value, onValueChange }) {
 function SelectRow({ value, onPress }) {
   return (
     <Pressable onPress={onPress} style={styles.select}>
-      <Icon name="chevron-down" size={16} color={colors.textDim} />
+      <Icon name="chevron-down" size={16} color={colors.gold} />
       <Text style={styles.selectText}>{value}</Text>
     </Pressable>
   );
 }
 
 export default function SettingsScreen({ onBack }) {
-  const [sound, setSound] = useState(0.8);
-  const [music, setMusic] = useState(0.6);
-  const [vibration, setVibration] = useState(true);
-  const [notifications, setNotifications] = useState(true);
-  const [lang] = useState('العربية');
-  const [quality, setQuality] = useState('متوسطة');
+  const s = useSettings();
+  const lang = 'العربية';
 
-  const cycleQuality = () =>
-    setQuality((q) => (q === 'منخفضة' ? 'متوسطة' : q === 'متوسطة' ? 'عالية' : 'منخفضة'));
+  const [sound, setSound] = useState(s.sound);
+  const [music, setMusic] = useState(s.music);
+  useEffect(() => {
+    setSound(s.sound);
+    setMusic(s.music);
+  }, [s.sound, s.music]);
+
+  const cycleQuality = () => {
+    const order = ['منخفضة', 'متوسطة', 'عالية'];
+    const i = order.indexOf(s.quality);
+    setSetting('quality', order[(i + 1) % order.length]);
+  };
+
+  const toggleVibration = (v) => {
+    setSetting('vibration', v);
+    if (v) feedback.tap();
+  };
 
   const resetProgress = () =>
-    Alert.alert('إعادة التعيين', 'هل تريد إعادة ضبط التقدم؟', [
+    Alert.alert('إعادة التعيين', 'هل تريد إعادة ضبط الإعدادات؟', [
       { text: 'إلغاء', style: 'cancel' },
-      { text: 'إعادة', style: 'destructive' },
+      { text: 'إعادة', style: 'destructive', onPress: resetSettings },
     ]);
 
-  const about = () => Alert.alert('عن اللعبة', 'المافيا — لعبة جماعية على جوال واحد.\nالإصدار 1.0.0');
+  const about = () => Alert.alert('عن اللعبة', 'مافيا الزعيم — لعبة جماعية على جوال واحد.\nالإصدار 2.0.0');
 
   return (
-    <Screen title="الإعدادات" onBack={onBack}>
-      <View style={styles.card}>
+    <Screen title="الإعدادات" subtitle="اضبط أجواء اللعبة" onBack={onBack} backdrop="room">
+      <Frame variant="plaque" rad={radius.lg} padding={space.md} style={styles.card}>
         <Row icon="volume-high" label="الصوت">
-          <Slider
-            style={styles.slider}
-            value={sound}
-            onValueChange={setSound}
-            minimumTrackTintColor={colors.frame}
-            maximumTrackTintColor="#2A241B"
-            thumbTintColor={colors.frame}
-          />
+          <Slider style={styles.slider} value={sound} onValueChange={setSound} onSlidingComplete={(v) => setSetting('sound', v)} minimumTrackTintColor={colors.gold} maximumTrackTintColor="#2A241B" thumbTintColor={colors.goldLight} />
         </Row>
         <Row icon="music" label="الموسيقى">
-          <Slider
-            style={styles.slider}
-            value={music}
-            onValueChange={setMusic}
-            minimumTrackTintColor={colors.frame}
-            maximumTrackTintColor="#2A241B"
-            thumbTintColor={colors.frame}
-          />
+          <Slider style={styles.slider} value={music} onValueChange={setMusic} onSlidingComplete={(v) => setSetting('music', v)} minimumTrackTintColor={colors.gold} maximumTrackTintColor="#2A241B" thumbTintColor={colors.goldLight} />
         </Row>
-        <Row icon="cellphone-vibration" label="الاهتزاز">
-          <GoldSwitch value={vibration} onValueChange={setVibration} />
+        <Row icon="vibrate" label="الاهتزاز">
+          <GoldSwitch value={s.vibration} onValueChange={toggleVibration} />
         </Row>
         <Row icon="web" label="اللغة">
           <SelectRow value={lang} onPress={() => Alert.alert('اللغة', 'العربية فقط حالياً.')} />
         </Row>
         <Row icon="quality-high" label="الجودة">
-          <SelectRow value={quality} onPress={cycleQuality} />
+          <SelectRow value={s.quality} onPress={cycleQuality} />
         </Row>
         <Row icon="bell" label="الإشعارات" last>
-          <GoldSwitch value={notifications} onValueChange={setNotifications} />
+          <GoldSwitch value={s.notifications} onValueChange={(v) => setSetting('notifications', v)} />
         </Row>
-      </View>
+      </Frame>
 
-      <View style={styles.card}>
+      <Frame variant="plaque" rad={radius.lg} padding={space.md} style={styles.card}>
         <Row icon="information-outline" label="عن اللعبة" onPress={about}>
           <Icon name="chevron-back" set="ion" size={18} color={colors.textDim} />
         </Row>
-        <Row icon="restore" label="إعادة تعيين التقدم" onPress={resetProgress} last>
+        <Row icon="restore" label="إعادة تعيين الإعدادات" onPress={resetProgress} last>
           <Icon name="chevron-back" set="ion" size={18} color={colors.textDim} />
         </Row>
-      </View>
+      </Frame>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.bgSoft,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: space.md,
-    marginBottom: space.md,
-  },
+  card: { marginBottom: space.md },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 14,
+    paddingVertical: 13,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
     gap: space.md,
   },
   rowLast: { borderBottomWidth: 0 },
   rowLabel: { flexDirection: 'row-reverse', alignItems: 'center', gap: 10 },
+  rowIcon: {
+    width: 34, height: 34, borderRadius: 17,
+    backgroundColor: colors.bgSoft, borderWidth: 1, borderColor: colors.border,
+    alignItems: 'center', justifyContent: 'center',
+  },
   label: { color: colors.text, fontSize: font.body, fontFamily: bodyBold },
   control: { flex: 1, alignItems: 'flex-start' },
   slider: { width: '100%', height: 32 },
   select: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    paddingHorizontal: space.md,
-    paddingVertical: 7,
+    flexDirection: 'row-reverse', alignItems: 'center', gap: 6,
+    backgroundColor: colors.bgSoft, borderWidth: 1, borderColor: colors.gold, borderRadius: radius.sm,
+    paddingHorizontal: space.md, paddingVertical: 7,
   },
   selectText: { color: colors.text, fontSize: font.small, fontFamily: bodyBold },
 });
